@@ -12,7 +12,7 @@ const scene = new THREE.Scene();
 const sizes = {
     width: window.innerWidth,
     height: window.innerHeight
-}
+};
 
 /**
  * Rezise
@@ -28,15 +28,42 @@ window.addEventListener('resize', () => {
 
     // Update Rendere 
     renderer.setSize(sizes.width, sizes.height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+});
 
-})
+/**
+ * Eventlistener for the Fullscreen Handler
+ */
+window.addEventListener('dblclick', () => {
+    const fullscreenElement = document.fullscreenElement || document.webkitfullscreenElement;
+
+    if (!fullscreenElement) {
+        if (canvas.requestFullscreen) {
+            canvas.requestFullscreen();
+        } else if (canvas.webkitrequestFullscreen) {
+            canvas.webkitrequestFullscreen();
+        }
+
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+
+        else if (document.webkitExitFullscreen) {
+            canvas.webkitExitFullscreen();
+        }
+
+    }
+});
+
+
 /**
  * Cursor
  */
 const cursor = {
     x: 0,
     y: 0
-}
+};
 window.addEventListener('mousemove', (event) => {
     cursor.x = event.clientX / sizes.width - 0.5;
     cursor.y = -(event.clientY / sizes.height - 0.5);
@@ -51,8 +78,9 @@ const mesh = new THREE.Mesh(
 );
 scene.add(mesh);
 
-// Create Camera 
-
+/**
+ *   Create Camera 
+*/
 
 
 // Camera 
@@ -68,7 +96,7 @@ const axesHelper = new THREE.AxesHelper(1);
 scene.add(axesHelper);
 
 // Controls
-const controls = new OrbitControls(camera, canvas)
+const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 
 // controls.target.y = 1;
@@ -80,7 +108,7 @@ const renderer = new THREE.WebGLRenderer({
 });
 
 renderer.setSize(sizes.width, sizes.height);
-
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 // Clock
 const clock = new THREE.Clock();
 
@@ -92,7 +120,7 @@ const clock = new THREE.Clock();
 // Animations
 const tick = () => {
 
-    const elapsedTime = clock.getElapsedTime()
+    const elapsedTime = clock.getElapsedTime();
     // Update objects
     // mesh.rotation.y = elapsedTime;
 
@@ -108,9 +136,9 @@ const tick = () => {
     controls.update();
 
     // Renderer 
-    renderer.render(scene, camera)
+    renderer.render(scene, camera);
 
     window.requestAnimationFrame(tick);
-}
+};
 
 tick();
