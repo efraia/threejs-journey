@@ -4,8 +4,53 @@ import GUI from 'lil-gui';
 import gsap from 'gsap';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
+/**
+ * Textures
+ */
+const loadingManager = new THREE.LoadingManager();
+loadingManager.onStart = () => {
+    console.log('onStart');
+};
+loadingManager.onLoad = () => {
+    console.log('onLoad');
+};
+loadingManager.onProgress = () => {
+    console.log('onProgress');
+};
+loadingManager.onError = () => {
+    console.log('onError');
+};
+
+
+const textureLoader = new THREE.TextureLoader(loadingManager);
+const minecraftTexture = textureLoader.load('src/textures/minecraft.png');
+const checkboard8x8Texture = textureLoader.load('src/textures/checkerboard-8x8.png');
+const checkboard1024Texture = textureLoader.load('src/textures/checkerboard-1024x1024.png');
+const colorTexture = textureLoader.load('/src/textures/door/color.jpg');
+const alphaTexture = textureLoader.load('/src/textures/door/alpha.jpg');
+const heightTexture = textureLoader.load('/src/textures/door/height.jpg');
+const normalTexture = textureLoader.load('/src/textures/door/normal.jpg');
+const ambientOcclusionTexture = textureLoader.load('/src/textures/door/ambientOcclusion.jpg');
+const metalnessTexture = textureLoader.load('/src/textures/door/metalness.jpg');
+const roughnessTexture = textureLoader.load('/src/textures/door/roughness.jpg');
+
+// colorTexture.repeat.x = 2;
+// colorTexture.repeat.y = 3;
+// colorTexture.wrapS = THREE.RepeatWrapping;
+// colorTexture.wrapT = THREE.RepeatWrapping;
+// colorTexture.offset.x = 0.5;
+// colorTexture.offset.y = 0.5;
+// colorTexture.rotation = Math.PI * .25;
+// colorTexture.center.x = .5;
+// colorTexture.center.y = .5;
+
+minecraftTexture.generateMipmaps = false;
+minecraftTexture.minFilter = THREE.NearestFilter;
+minecraftTexture.magFilter = THREE.NearestFilter;
+
 
 const scene = new THREE.Scene();
+
 
 // Canvas 
 const canvas = document.querySelector('canvas.webgl');
@@ -52,10 +97,11 @@ window.addEventListener('resize', () => {
 });
 
 // Create object
-const geometry = new THREE.BoxGeometry(1, 1, 1, 5, 5, 5);
-const material = new THREE.MeshBasicMaterial({ color: objectParams.color, wireframe: true });
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ map: minecraftTexture });
 const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
+
 
 
 // Controls
@@ -140,11 +186,11 @@ gui
 
 gui
     .add(material, 'wireframe');
-gui
-    .addColor(objectParams, 'color')
-    .onChange(() => (
-        material.color.set(objectParams.color)
-    ));
+// gui
+//     .addColor(objectParams, 'color')
+//     .onChange(() => (
+//         material.color.set(objectParams.color)
+//     ));
 
 gui
     .add(objectParams, 'spin');
