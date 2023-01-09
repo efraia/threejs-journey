@@ -1,6 +1,8 @@
 import './style.css';
 import * as THREE from 'three';
+import GUI from 'lil-gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
 
 const scene = new THREE.Scene();
 
@@ -27,10 +29,9 @@ scene.add(camera);
  */
 
 // Create object
-const mesh = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: 0xff0000 })
-);
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 
 // Controls
@@ -78,6 +79,7 @@ const tick = () => {
     const elapsedTime = clock.getElapsedTime();
     controls.update();
 
+    camera.lookAt(mesh.position);
     // Renderer 
     renderer.render(scene, camera);
 
@@ -85,3 +87,34 @@ const tick = () => {
 };
 
 tick();
+
+/**
+ * Debug UI
+ */
+const gui = new GUI();
+
+gui
+    .add(mesh.position, 'x')
+    .min(-3)
+    .max(3)
+    .step(0.1)
+    .name('X Position');
+
+gui
+    .add(mesh.position, 'y')
+    .min(-3)
+    .max(3)
+    .step(0.1);
+
+gui
+    .add(mesh.position, 'z')
+    .min(-3)
+    .max(3)
+    .step(0.1);
+
+gui
+    .add(mesh, 'visible');
+
+gui
+    .add(material, 'wireframe');
+
